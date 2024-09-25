@@ -13,4 +13,11 @@ class Response:
                 "message": message,
                 "code": 404,
                 "data": data,
-            }
+            },404
+    
+    def code500(message, data=[]):
+        return {
+                "message": message,
+                "code": 500,
+                "data": data,
+        },500

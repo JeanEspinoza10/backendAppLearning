@@ -102,3 +102,6 @@ dmypy.json
 *.bak
 
 prueba/
+seeds/
+
+*.txt
