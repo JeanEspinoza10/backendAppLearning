@@ -5,7 +5,7 @@ from app import db
 from app.models.roles_model import RoleModel
 from app.models.users_model import UserModel
 from app.models.phrases_model import PhrasesModel
-
+from app.utils.generate_img import GeneretaImg
 
 class ServiceController:
     def __init__(self):
@@ -14,6 +14,7 @@ class ServiceController:
         self.phrasesModel = PhrasesModel
         self.generatePhrases = Phrases()
         self.generateSounds = Sounds()
+        self.generateImg = GeneretaImg()
     def free(self):
         try:
             records_phrases = self.phrasesModel.query.filter(self.phrasesModel.user_id == None).all()
@@ -21,11 +22,13 @@ class ServiceController:
                 data = self.generatePhrases.generate_localhost()
                 for element in data['phrases']:
                     sound_url = self.generateSounds.text_to_speech_file(element["phrase"])
+                    img_url = self.generateImg.generate_img(prompt=element["phrase"])
                     record = self.phrasesModel.create(
                         title= element["phrase"],
                         sound_url =sound_url,
                         description = element["description"],
                         translation = element["translation"],
+                        img_url = img_url,
                     )
                     db.session.add(record)
                     db.session.commit()
@@ -42,7 +45,8 @@ class ServiceController:
                     'title': record.title,
                     'sound_url': record.sound_url,
                     'description': record.description,
-                    'translation':record.translation
+                    'translation':record.translation,
+                    'img_url':record.img_url
                 }
                 response.append(record_dict)
             return {
