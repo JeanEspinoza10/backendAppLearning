@@ -1,6 +1,6 @@
 import os
 import json
-from .const import data_phrases
+from ..utils.const import data_phrases
 from openai import OpenAI
 from dotenv import load_dotenv
 

@@ -22,7 +22,7 @@ class DataFree(Resource):
             return {
                 "messge": f"Mistakes in consult : {err}",
                 "code":500,
-            }
+            },500
 
 @service_ns.route('/free/sound/<int:id>')
 class SoundFree(Resource):
@@ -32,9 +32,24 @@ class SoundFree(Resource):
             End point that returns sounds
             '''
             controller = ServiceController()
-            return controller.download_free(id=id)
+            return controller.download_free(id=id,valueItem="sound_url")
         except Exception as err:
             return {
                 "messge": f"Mistakes in consult: {err}",
                 "code":500,
-            }
+            },500
+        
+@service_ns.route('/free/img/<int:id>')
+class ImgFree(Resource):
+    def get(self,id):
+        try:
+            '''
+            End point that returns sounds
+            '''
+            controller = ServiceController()
+            return controller.download_free(id=id,valueItem="img_url")
+        except Exception as err:    
+            return {
+                "messge": f"Mistakes in consult: {err}",
+                "code":500,
+            },500

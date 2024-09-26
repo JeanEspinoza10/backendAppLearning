@@ -1,11 +1,12 @@
 import base64
-from ..utils.phrases import Phrases
-from ..utils.sounds import Sounds
+from app.core.aws import AWS
+from app.core.phrases import Phrases
+from app.core.sounds import Sounds
 from app import db
 from app.models.roles_model import RoleModel
 from app.models.users_model import UserModel
 from app.models.phrases_model import PhrasesModel
-from app.utils.generate_img import GeneretaImg
+from app.core.generate_img import GeneretaImg
 
 class ServiceController:
     def __init__(self):
@@ -15,6 +16,7 @@ class ServiceController:
         self.generatePhrases = Phrases()
         self.generateSounds = Sounds()
         self.generateImg = GeneretaImg()
+        self.aws = AWS()
     def free(self):
         try:
             records_phrases = self.phrasesModel.query.filter(self.phrasesModel.user_id == None).all()
@@ -62,7 +64,7 @@ class ServiceController:
             },500
         
     
-    def download_free(self,id:int):
+    def download_free(self,id,valueItem):
         try:
             record_phrase = self.phrasesModel.query.filter(self.phrasesModel.id == id).first()
             if record_phrase.user_id:
@@ -72,11 +74,11 @@ class ServiceController:
                         'data':[],
                     },401
             else:
-                file_sound = self.generateSounds.download_file(record_phrase.sound_url)
+                file_sound = self.aws.download_file(getattr(record_phrase, valueItem, None))
                 file_content = file_sound.read()
                 encoded_content = base64.b64encode(file_content).decode('utf-8')
                 response = {
-                    'file_name': record_phrase.sound_url,
+                    'file_name': getattr(record_phrase, valueItem, None),
                     'file_content_base64': encoded_content
                 }
                 return {

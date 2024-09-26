@@ -1,11 +1,11 @@
 
-import os
-import uuid
 from dotenv import load_dotenv
 from elevenlabs import VoiceSettings
 from elevenlabs.client import ElevenLabs
 from io import BytesIO
-import boto3
+from app.core.aws import AWS
+import os
+import uuid
 
 load_dotenv()
 
@@ -21,9 +21,7 @@ class Sounds():
     def __init__(self):
         self.client_ElevenLabs = ElevenLabs(api_key=ELEVENLABS_API_KEY,)
         
-        self.session_aws = boto3.session.Session(aws_access_key_id=AWS_ACCESS_KEY_ID,
-                                        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                                        region_name=REGION_NAME)
+        self.aws = AWS()
 
     def text_to_speech_file(self,text):
         try:
@@ -50,20 +48,8 @@ class Sounds():
             file_stream.seek(0)
             # Generate a unique file name for the output MP3 file
             file_name = f"{uuid.uuid4()}.mp3"
-            # Upload the file directly to S3
-            s3_client = self.session_aws.client('s3')
-            s3_client.upload_fileobj(file_stream, BUCCKET_NAME, file_name)
+            self.aws.upload_file(file_name,file_stream)
             return file_name
         except Exception as err:
             raise Exception("Mistake in function for save text in respository:",err)
-        
     
-    def download_file(self,file_name):
-        try:
-            s3 = self.session_aws.client('s3')
-            file_stream = BytesIO()
-            s3.download_fileobj('appingles', file_name, file_stream)
-            file_stream.seek(0)
-            return file_stream
-        except Exception as err:
-            raise Exception("Mistake in function download file from repository:",err)
