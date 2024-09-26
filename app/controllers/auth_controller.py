@@ -23,7 +23,6 @@ class AuthController:
                     # 2. Validate that the password is correct
                     if record.checkPassword(password):
                         # 3rd Creation of JWT (Access Token and Refresh Token)
-                        print(record)
                         user_id = record.id
                         access_token = create_access_token(identity=user_id)
                         refresh_token = create_refresh_token(identity=user_id)

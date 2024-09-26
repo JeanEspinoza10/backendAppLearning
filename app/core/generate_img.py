@@ -27,11 +27,11 @@ class GeneretaImg:
             response_url = requests.get(image_url)
             img_data = BytesIO(response_url.content)
             img_data.seek(0)
-            file_name = f"{user_id}{uuid.uuid4()}.png"
+            file_name = f"{user_id}{uuid.uuid4()}.jpg"
             self.aws.upload_file(file_name,file_content=img_data)
             return file_name
         except Exception as err:
             raise Exception("Mistake in phrases generate: ",err)
         
-        
+
     
