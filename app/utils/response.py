@@ -8,6 +8,13 @@ class Response:
             "data": data,
         }, 200
     
+    def code400(message, data=[]):
+        return{
+            "message": message,
+            "code": 400,
+            "data": data,
+        }, 400
+    
     def code404(message, data=[]):
         return {
                 "message": message,

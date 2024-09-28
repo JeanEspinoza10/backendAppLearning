@@ -27,6 +27,7 @@ class AuthController:
                         access_token = create_access_token(identity=user_id)
                         refresh_token = create_refresh_token(identity=user_id)
                         data = [{
+                            'name': record.name,
                             'access_token': access_token,
                             'refresh_token': refresh_token
                         }]
@@ -37,7 +38,7 @@ class AuthController:
             else:
                 return self.response.code404(message="Email or password was not sent")
         except Exception as e:
-            return self.response.code500(message=f"An error occurred: {e}")
+            return self.response.code400(message=f"An error occurred: {e}")
         
     def signUp(self, data):
         try:
@@ -49,14 +50,14 @@ class AuthController:
             db.session.commit()
             return self.response.code200(message="User created successfully")
         except Exception as e:
-            self.response.code500(message=f"An error occurred: {e}")
+            self.response.code400(message=f"An error occurred: {e}")
 
     def refreshToken(self, identity):
         try:
             access_token = create_access_token(identity=identity)
             return self.response.code200(message="Token refreshed successfully", data=[{"access_token": access_token}])
         except Exception as e:
-            return  self.response.code500(message=f"An error occurred: {e}")
+            return  self.response.code400(message=f"An error occurred: {e}")
 
     def resetPassword(self, data, identity):
         try:
@@ -76,4 +77,4 @@ class AuthController:
             return self.response.code404(message="Email not found or not the same user")
         except Exception as e:
             db.session.rollback()
-            return self.response.code500(message=f"An error occurred: {e}")
+            return self.response.code400(message=f"An error occurred: {e}")
