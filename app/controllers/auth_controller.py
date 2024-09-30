@@ -1,7 +1,7 @@
 from app import db
 from app.models.users_model import UserModel
 from app.utils.response import Response
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, current_user
 from secrets import token_hex
 
 
@@ -11,6 +11,7 @@ class AuthController:
         self.model = UserModel
         self.rol_id = 2
         self.response = Response
+        self.current_user = current_user
 
     def signIn(self, data):
         try:
@@ -78,3 +79,12 @@ class AuthController:
         except Exception as e:
             db.session.rollback()
             return self.response.code400(message=f"An error occurred: {e}")
+        
+    def validateToken(self):
+        try:
+            user_id = self.current_user.id
+            record = self.model.where(id=user_id).first()
+            if record:
+                return self.response.code200(message="Token validated successfully")
+        except Exception as e:
+            return  self.response.code400(message=f"An error occurred: {e}")

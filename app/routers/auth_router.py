@@ -37,7 +37,16 @@ class RefreshToken(Resource):
         identity = get_jwt_identity()
         controller = AuthController()
         return controller.refreshToken(identity)
-    
+
+@auth_ns.route('/token/validate')
+@auth_ns.doc(security="Bearer")
+class ValidateToken(Resource):
+    @jwt_required()
+    def get(self):
+        '''Validate Token'''
+        controller = AuthController()
+        return controller.validateToken()
+
 @auth_ns.route('/reset_password')
 @auth_ns.doc(security="Bearer")
 class ResetPassword(Resource):
@@ -49,3 +58,4 @@ class ResetPassword(Resource):
         data = request.json
         controller = AuthController()
         return controller.resetPassword(data, identity)
+    

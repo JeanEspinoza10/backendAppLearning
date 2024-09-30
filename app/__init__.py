@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES')))
-app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(hours=int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES')))
+app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(minutes=int(os.getenv('JWT_REFRESH_TOKEN_EXPIRES')))
 
 
 db = SQLAlchemy(app)
