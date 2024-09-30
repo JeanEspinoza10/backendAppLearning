@@ -1,6 +1,5 @@
 
 class Response:
-    
     def code200(message, data=[]):
         return{
             "message": message,
@@ -13,7 +12,7 @@ class Response:
             "message": message,
             "code": 400,
             "data": data,
-        }, 400
+        },400
     
     def code404(message, data=[]):
         return {
