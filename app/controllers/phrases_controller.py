@@ -82,3 +82,21 @@ class PhrasesController:
             message=f"An error occurred:{e}"
             return self.response.code400(message=message)
     
+    def download(self,id,valueItem):
+        try:
+            user_id = self.current_user.id
+            record_phrase = self.phrasesModel.query.filter(self.phrasesModel.id == id, user_id == user_id).first()
+            if record_phrase:
+                file_sound = self.aws.download_file(getattr(record_phrase, valueItem, None))
+                file_content = file_sound.read()
+                encoded_content = base64.b64encode(file_content).decode('utf-8')
+                response = {
+                    'file_name': getattr(record_phrase, valueItem, None),
+                    'file_content_base64': encoded_content
+                }
+                return self.response.code200(message="Update phrases correct.",data=response)
+            else:
+                return self.response.code404(message="Not have permission for record")                
+        except Exception as e:
+            message=f"An error occurred:{e}"
+            return self.response.code400(message=message)

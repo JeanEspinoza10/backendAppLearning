@@ -41,3 +41,21 @@ class PhrasesUpdate(Resource):
         ''' Update phrases only status'''
         controller = PhrasesController()
         return controller.update(request.json)
+
+@phrases_ns.route('/img/<int:id>')
+@phrases_ns.doc(security="Bearer")
+class PhrasesImg(Resource):
+    @jwt_required()
+    def get(self,id):
+        ''' Get phrases img'''
+        controller = PhrasesController()
+        return controller.download(id=id,valueItem="img_url")
+    
+@phrases_ns.route('/sound/<int:id>')
+@phrases_ns.doc(security="Bearer")
+class PhrasesSound(Resource):
+    @jwt_required()
+    def get(self,id):
+        ''' Get phrases sound'''
+        controller = PhrasesController()
+        return controller.download(id=id,valueItem="sound_url")
