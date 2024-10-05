@@ -136,3 +136,11 @@ class AuthController:
                 return self.response.code200(message="Code verification correct")
         except Exception as e:
             return self.response.code400(message=f"An error occurred: {e}")
+        
+    def newCode(self,data):
+        try:
+            email = data['email']
+            record = self.model.where(email=email).first()
+            return self.verificationController.create(user_id=record.id,email=data['email'])
+        except Exception as e:
+            return self.response.code400(message=f"An error occurred: {e}")

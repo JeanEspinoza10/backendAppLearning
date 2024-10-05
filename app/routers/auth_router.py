@@ -75,3 +75,12 @@ class Verification(Resource):
         data = request.json
         controller = AuthController()
         return controller.validateCodeVerification(data)
+    
+@auth_ns.route('/newcode')
+class NewCode(Resource):
+    @auth_ns.expect(request_schema.resetPassword(), validate=True)
+    def post(self):
+        '''New Code Verification'''
+        data = request.json
+        controller = AuthController()
+        return controller.newCode(data)

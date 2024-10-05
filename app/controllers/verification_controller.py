@@ -20,7 +20,7 @@ class VerificationController:
                 'code': self.random.randint(1000,9999)
             }
             # Update or Create code
-            record = self.model.where(email=email).first()
+            record = self.model.where(email=email,status=True).first()
             if record:
                 record.update(**data)
             else:
@@ -47,7 +47,7 @@ class VerificationController:
         
     def verifyUserStatus(self,email):
         try:
-            record = self.model.where(email=email, status=True).all()
+            record = self.model.where(email=email,status=True).all()
             if record:
                 raise Exception('User needs to verify their code')
             else:
