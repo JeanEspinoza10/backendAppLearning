@@ -34,9 +34,9 @@ api = Api(
     app,
     title='App Learning Ingles',
     version='0.1',
-    description='Endpoints',
+    description='API for creating phrases in English',
     authorizations=authorizations,
-    doc='/swagger-ui'
+    doc='/'
 )
 
 jwt = JWTManager(app)

@@ -17,7 +17,7 @@ class UserModel(BaseModel):
     role = relationship('RoleModel', uselist=False, back_populates='users')
 
     usersPhrases = relationship('PhrasesModel', uselist=True, back_populates='users')
-    
+    usersVerification = relationship('VerificationModel', uselist=True, back_populates='users')
 
     def hashPassword(self):
         pwd_encode = self.password.encode('utf-8')

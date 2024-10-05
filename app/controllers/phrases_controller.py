@@ -6,6 +6,7 @@ from app.models.phrases_model import PhrasesModel
 from app.utils.response import Response
 from flask_jwt_extended import current_user
 from app.core.generate_img import GeneretaImg
+from datetime import date
 from app import db
 
 class PhrasesController:
@@ -17,11 +18,26 @@ class PhrasesController:
         self.response = Response
         self.current_user = current_user
         self.generateImg = GeneretaImg()
+
+    def validateQuantity(self,user_id):
+        try:
+            records = self.phrasesModel.where(user_id=user_id).order_by('id')
+            date_today = date.today()
+            quantity = 0
+            for record in records:
+                if record.created_at.date() == date_today:
+                    quantity += 1
+            if quantity >= 10:
+                raise Exception('You can not create more than 10 phrases per day')
+            else:
+                return True
+        except Exception as e:
+            raise Exception(f"{e}")
     
     def getAll(self):
         try:
             user_id = int(self.current_user.id)
-            records = self.phrasesModel.where(user_id=user_id).order_by('id').all()
+            records = self.phrasesModel.where(user_id=user_id, status=True).order_by('id').all()
             data = []
             if records:
                 for record in records:
@@ -39,30 +55,35 @@ class PhrasesController:
         except Exception as e:
             return self.response.code400(message=f"An error occurred: {e}")
         
-    def create(self, data):
+    def create(self, data, user_id=0):
         try:
-            user_id = self.current_user.id
-            prompt = data['phrase']
-            title = self.generatePhrases.generate_phrases(prompt=prompt)
-            sound_url = self.generateSounds.text_to_speech_file(text=title)
-            img_url = self.generateImg.generate_img(prompt=title,user_id=user_id)
-            translation = prompt
-            description = self.generatePhrases.generate_description(prompt=title)
-            data_record = {
-                'title': title,
-                'sound_url': sound_url,
-                'description': description,
-                'translation': translation,
-                'img_url': img_url,
-                'user_id': user_id,
-            }
-            record = self.phrasesModel.create(**data_record)
-            db.session.add(record)
-            db.session.commit()
-            return self.response.code200(message="Create phrases correct.",data=data_record)
+            if user_id != 0:
+                user_id = user_id
+            else:
+                user_id = self.current_user.id
+            
+            quantity = self.validateQuantity(user_id=user_id)
+            if quantity:
+                prompt = data['phrase']
+                title = self.generatePhrases.generate_phrases(prompt=prompt)
+                sound_url = self.generateSounds.text_to_speech_file(text=title)
+                img_url = self.generateImg.generate_img(prompt=title,user_id=user_id)
+                translation = prompt
+                description = self.generatePhrases.generate_description(prompt=title)
+                data_record = {
+                    'title': title,
+                    'sound_url': sound_url,
+                    'description': description,
+                    'translation': translation,
+                    'img_url': img_url,
+                    'user_id': user_id,
+                }
+                record = self.phrasesModel.create(**data_record)
+                db.session.add(record)
+                db.session.commit()
+                return self.response.code200(message="Create phrases correct.",data=data_record)
         except Exception as e:
-            message=f"An error occurred:{e}"
-            return self.response.code400(message=message)
+            return self.response.code400(message=f"An error occurred:{e}")
         
     def update(self, data):
         try:

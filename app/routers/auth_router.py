@@ -48,14 +48,30 @@ class ValidateToken(Resource):
         return controller.validateToken()
 
 @auth_ns.route('/reset_password')
-@auth_ns.doc(security="Bearer")
 class ResetPassword(Resource):
     @auth_ns.expect(request_schema.resetPassword(), validate=True)
-    @jwt_required()
     def post(self):
         '''Reset Password'''
-        identity = get_jwt_identity()
         data = request.json
         controller = AuthController()
-        return controller.resetPassword(data, identity)
+        return controller.resetPassword(data)
+
+@auth_ns.route('/reset_password/verification')
+@auth_ns.doc(security="Bearer")
+class ResetPasswordVerification(Resource):
+    @jwt_required()
+    @auth_ns.expect(request_schema.resetPasswordVerification(), validate=True)
+    def post(self):
+        '''Reset Password Verification'''
+        data = request.json
+        controller = AuthController()
+        return controller.resetPasswordAfterVerification(data)
     
+@auth_ns.route('/verification')
+class Verification(Resource):
+    @auth_ns.expect(request_schema.verificationCode(), validate=True)
+    def post(self):
+        '''Verification Code'''
+        data = request.json
+        controller = AuthController()
+        return controller.validateCodeVerification(data)

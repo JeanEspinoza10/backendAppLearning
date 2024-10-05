@@ -14,8 +14,8 @@ class AuthRequestSchema:
 
     def signup(self):
         return self.namespace.model('Auth SignUp', {
-            'name': fields.String(required=True, min_length=2, max_length=80),
-            'password': fields.String(required=True, min_length=4, max_length=120),
+            'name': fields.String(required=True, min_length=10, max_length=80),
+            'password': fields.String(required=True, min_length=10, max_length=120),
             'email': fields.String(required=True, min_length=3, max_length=140)
         })
 
@@ -30,4 +30,16 @@ class AuthRequestSchema:
     def resetPassword(self):
         return self.namespace.model('Auth Reset Password', {
             'email': fields.String(required=True)
+        })
+    
+    def resetPasswordVerification(self):
+        return self.namespace.model('Reset Password After Verification', {
+            'email': fields.String(required=True),
+            'password': fields.String(required=True,min_length=10, max_length=120)
+        })
+    
+    def verificationCode(self):
+        return self.namespace.model('Auth Verification', {
+            'email': fields.String(required=True),
+            'code': fields.String(required=True)
         })

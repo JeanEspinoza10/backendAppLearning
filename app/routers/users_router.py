@@ -10,12 +10,22 @@ user_ns = api.namespace(
     path = "/users"
 )
 
+@user_ns.route("/all")
+@user_ns.doc(security="Bearer")
+class Users(Resource):
+    @jwt_required()
+    @role_required(rol_id=1)
+    def get(self):
+        ''' List all users'''
+        controller = UsersController()
+        return controller.all()
+
 @user_ns.route("/<int:id>")
 @user_ns.doc(security="Bearer")
 class UserById(Resource):
     @jwt_required()
     @role_required(rol_id=1)
-    def get(self, id):
-        ''' Obtener un usuario por el ID '''
+    def delete(self, id):
+        ''' Delete user by id'''
         controller = UsersController()
-        return controller.getById(id)
+        return controller.delete(id)
