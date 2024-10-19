@@ -23,7 +23,7 @@ class ServiceController:
             if not records_phrases:
                 data = self.generatePhrases.generate_localhost()
                 for element in data['phrases']:
-                    sound_url = self.generateSounds.text_to_speech_file(element["phrase"])
+                    sound_url = self.generateSounds.text_to_speech_file_OpenAI(element["phrase"])
                     img_url = self.generateImg.generate_img(prompt=element["phrase"])
                     record = self.phrasesModel.create(
                         title= element["phrase"],

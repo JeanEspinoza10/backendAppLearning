@@ -27,8 +27,8 @@ class PhrasesController:
             for record in records:
                 if record.created_at.date() == date_today:
                     quantity += 1
-            if quantity >= 10:
-                raise Exception('You can not create more than 10 phrases per day')
+            if quantity >= 3:
+                raise Exception('You can not create more than 3 phrases per day')
             else:
                 return True
         except Exception as e:
@@ -66,7 +66,7 @@ class PhrasesController:
             if quantity:
                 prompt = data['phrase']
                 title = self.generatePhrases.generate_phrases(prompt=prompt)
-                sound_url = self.generateSounds.text_to_speech_file(text=title)
+                sound_url = self.generateSounds.text_to_speech_file_OpenAI(text=title)
                 img_url = self.generateImg.generate_img(prompt=title,user_id=user_id)
                 translation = prompt
                 description = self.generatePhrases.generate_description(prompt=title)
