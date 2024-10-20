@@ -22,8 +22,6 @@ Como se aprecia en la imagen, la API se encarga de generar frases en inglés de 
 # Tecnologías
 La API se desarrolló utilizando las siguientes tecnologías:
 
-- PostgreSQL	<img src="./readme/postgresql.svg" alt="PostgreSQL" height="20px" width="20px">
-
 ## Python 
 <img src="./readme/python.svg" alt="Python" height="40px" width="40px">
 
@@ -57,7 +55,8 @@ La base de datos que se utiliza es PostgreSQL. Esto a su vez se encuentra desple
 # Funcionamiento
 
 ## Infraestructura
-LA infraestructura de la aplicación se ha realizado utilizando AWS, ver imagen de la arquitectura.
+La infraestructura de la aplicación se ha diseñado utilizando **AWS**. A continuación, se presenta la imagen de la arquitectura.
+
 
 ![Infraestructura](./readme/infra.svg)
 
