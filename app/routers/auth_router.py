@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.schemas.auth_schemas import AuthRequestSchema
 from app.utils.decorators import role_required
 auth_ns = api.namespace(
-    name='Autenticación',
+    name='Authentication',
     description='Routers for authentication',
     path='/auth'
 )
