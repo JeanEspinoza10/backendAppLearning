@@ -37,9 +37,13 @@ Se utilizó la API de OpenAI para poder realizar las siguientes tareas:
 - Generar el audio de la frase traducida.
 
 ## AWS
-<img src="./readme/aws.svg" alt="AWS" height="40px" width="40px" style="display:inline; margin-right:10px;">
-<img src="./readme/ubuntu.svg" alt="Ubuntu" height="40px" width="40px" style="display:inline; margin-right:10px;">
-<img src="./readme/nginx.svg" alt="Nginx" height="40px" width="40px" style="display:inline; margin-right:10px;">
+<table>
+  <tr>
+    <td><img src="./readme/aws.svg" alt="AWS" height="40px" width="40px"></td>
+    <td><img src="./readme/ubuntu.svg" alt="Ubuntu" height="40px" width="40px"></td>
+    <td><img src="./readme/nginx.svg" alt="Nginx" height="40px" width="40px"></td>
+  </tr>
+</table>
 
 Para el tema de despliegue, se utilizó el servicio de AWS EC2 utilizando el servidor con el sistema operativo Ubuntu 22.04. Para la creación del servidor web se utilizo Nginx, que se encarga de servir las peticiones HTTP y redireccionarlas a Flask.
 
