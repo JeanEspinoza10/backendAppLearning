@@ -100,11 +100,11 @@ Las secciones de la documentación son las siguientes:
 # Despliegue
 Para poder desplegar la aplicación en su local o servidor propio es necesario seguir los siguientes pasos:
 
-## **:one:**  Clonar el repositorio.
+### **:one:**  Clonar el repositorio.
 
-## **:two:** Instalar las dependencias necesarias del archivo `requirements.txt`.
+### **:two:** Instalar las dependencias necesarias del archivo `requirements.txt`.
 
-## **:three:** Crear un archivo `.env`
+### **:three:** Crear un archivo `.env`
 
 En la raíz del proyecto con las siguientes variables de entorno:
 
@@ -129,12 +129,12 @@ En la raíz del proyecto con las siguientes variables de entorno:
         FLASK_DEBUG = <booleano para desarrollo local>
 ```
 
-## **:four:** Posteriormente, ejecutar las migraciones de la base de datos con el siguiente comando:
+### **:four:** Posteriormente, ejecutar las migraciones de la base de datos con el siguiente comando:
 
 ```
     flask db migrate
 ```
-## **:five:** Crear una carpeta en la raiz del proyecto 
+### **:five:** Crear una carpeta en la raiz del proyecto 
 
 El nombre de la carpeta debe ser `seeds` y dentro de ella, crear un archivo llamado `roles_seeder.py` y `users_seeder.py`, con el siguiente contenido:
 
@@ -187,22 +187,22 @@ El nombre de la carpeta debe ser `seeds` y dentro de ella, crear un archivo llam
                         self.db.session.add(new_record)
 ```
 
-## **:six:**Cargar los roles y sus usuarios:
+### **:six:**Cargar los roles y sus usuarios:
 ```
     flask db seed
 ```
-## **:seven:** Iniciar el servidor de Flask:
+### **:seven:** Iniciar el servidor de Flask:
 ```
     flask run
 ```
 
 # Deuda Técnica
 
-## **:one:**  Devolución de los recursos de imagenes y sonidos generados.
+### **:one:**  Devolución de los recursos de imagenes y sonidos generados.
 Buscar una mejor forma de devolver los recursos debido a que la API actualmente esta devolviendo el archivo en base64 y no en formato original. Una posible solución seria brindar una dirección URL para acceder a los recursos, pero esto requeriría una implementación adicional en el servidor de AWS.
 
-## **:two:**  Obtener también la traducción de la descripción de la frase.
+### **:two:**  Obtener también la traducción de la descripción de la frase.
 Actualmente, la API solamente devuelve la imagen y el sonido de la frase, pero no de la descripción. Esto se solucionaría agregando una nueva columna en la tabla `phrases` para guardar la traducción de la descripción de la frase.
 
-## **:three:**  Mejorar el manejo de errores.
+### **:three:**  Mejorar el manejo de errores.
 Para mejorar el manejo de errores, se podría implementar una función de manejo de errores personalizada en la API. Esto permitiría a la API devolver mensajes de error más detallados y específicos, como por ejemplo "No se pudo generar la imagen debido a un error de conexión a la base de datos".
