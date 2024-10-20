@@ -100,8 +100,14 @@ Las secciones de la documentación son las siguientes:
 # Despliegue
 Para poder desplegar la aplicación en su local o servidor propio es necesario seguir los siguientes pasos:
 
-1. Clonar el repositorio.
-2. Instalar las dependencias necesarias del archivo `requirements.txt`.
+**:one:**
+
+Clonar el repositorio.
+
+**:two:**
+
+Instalar las dependencias necesarias del archivo `requirements.txt`.
+
 3. Crear un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno:
 
 ```
