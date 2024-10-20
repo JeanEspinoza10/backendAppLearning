@@ -37,7 +37,7 @@ Se utilizó la API de OpenAI para poder realizar las siguientes tareas:
 - Generar el audio de la frase traducida.
 
 ## AWS
-<table>
+<table border="0">
   <tr>
     <td><img src="./readme/aws.svg" alt="AWS" height="40px" width="40px"></td>
     <td><img src="./readme/ubuntu.svg" alt="Ubuntu" height="40px" width="40px"></td>
