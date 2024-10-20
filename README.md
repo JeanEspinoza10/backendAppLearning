@@ -2,6 +2,8 @@
 # PhraseForge API 
 Este proyecto surge de la necesidad de mejorar el vocabulario y la pronunciación del idioma inglés, ya que siempre se recomienda enfocarse en aprender frases completas. De esta idea nació la creación de una API que permite generar estas frases en inglés de manera automatizada.
 
+**URL de la API desplegada**: `https://ingles.appdevelopmentapis.site/`
+
 ## ¿Cómo funciona?
 
 ![Funcionamiento de API](./readme/api.svg)
