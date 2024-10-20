@@ -32,7 +32,7 @@ authorizations = {
 
 api = Api(
     app,
-    title='App Learning Ingles',
+    title='PhraseForge API',
     version='0.1',
     description='API for creating phrases in English',
     authorizations=authorizations,
