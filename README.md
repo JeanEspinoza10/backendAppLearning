@@ -13,7 +13,7 @@ Como se aprecia en la imagen, la API se encarga de generar frases en inglés de 
 2. [Funcionamiento](#funcionamiento)
 3. [Documentación](#documentación)
 5. [Despliegue](#despliegue)
-6. [Licencia](#licencia)
+6. [Deuda Técnica](#deuda-técnica)
 
 
 
@@ -100,90 +100,109 @@ Las secciones de la documentación son las siguientes:
 # Despliegue
 Para poder desplegar la aplicación en su local o servidor propio es necesario seguir los siguientes pasos:
 
-**:one:**
+## **:one:**  Clonar el repositorio.
 
-Clonar el repositorio.
+## **:two:** Instalar las dependencias necesarias del archivo `requirements.txt`.
 
-**:two:**
+## **:three:** Crear un archivo `.env`
 
-Instalar las dependencias necesarias del archivo `requirements.txt`.
-
-3. Crear un archivo `.env` en la raíz del proyecto con las siguientes variables de entorno:
-
-```
-SQLALCHEMY_DATABASE_URI = <url de la base de datos>
-DATABASE_USER = <usuario de la base de datos>
-DATABASE_PASSWORD = <contraseña de la base de datos>
-DATABASE_PORT = <puerto de la base de datos>
-AWS_ACCESS_KEY_ID = <clave de acceso a AWS>
-AWS_SECRET_ACCESS_KEY = <clave de acceso secreto a AWS>
-REGION_NAME = <nombre de la región de AWS>
-BUCCKET_NAME = <nombre del bucket de AWS>
-OPENAI_KEY = <clave de API de OpenAI>
-
-EMAIL_USER = <usuario de correo electrónico>
-EMAIL_PASSWORD = <contraseña de correo electrónico para app de tercero>
-
-JWT_SECRET_KEY = <clave secreta para JWT>
-JWT_ACCESS_TOKEN_EXPIRES = <tiempo de expiración de token de acceso>
-JWT_REFRESH_TOKEN_EXPIRES = <tiempo de expiración de token de refresco>
-FLASK_APP = 'main.py'
-FLASK_DEBUG = <booleano para desarrollo local>
-```
-4. Posteiormente, ejecutar las migraciones de la base de datos con el siguiente comando:
-```
-flask db migrate
-```
-5. Crear una carpeta en la raiz del proyecto llamada `seeds` y dentro de ella, crear un archivo llamado `roles_seeder.py` y `users_seeder.py`, con el siguiente contenido:
+En la raíz del proyecto con las siguientes variables de entorno:
 
 ```python
-from flask_seeder import Seeder
-from app.models.roles_model import RoleModel
+        SQLALCHEMY_DATABASE_URI = <url de la base de datos>
+        DATABASE_USER = <usuario de la base de datos>
+        DATABASE_PASSWORD = <contraseña de la base de datos>
+        DATABASE_PORT = <puerto de la base de datos>
+        AWS_ACCESS_KEY_ID = <clave de acceso a AWS>
+        AWS_SECRET_ACCESS_KEY = <clave de acceso secreto a AWS>
+        REGION_NAME = <nombre de la región de AWS>
+        BUCCKET_NAME = <nombre del bucket de AWS>
+        OPENAI_KEY = <clave de API de OpenAI>
+
+        EMAIL_USER = <usuario de correo electrónico>
+        EMAIL_PASSWORD = <contraseña de correo electrónico para app de tercero>
+
+        JWT_SECRET_KEY = <clave secreta para JWT>
+        JWT_ACCESS_TOKEN_EXPIRES = <tiempo de expiración de token de acceso>
+        JWT_REFRESH_TOKEN_EXPIRES = <tiempo de expiración de token de refresco>
+        FLASK_APP = 'main.py'
+        FLASK_DEBUG = <booleano para desarrollo local>
+```
+
+## **:four:** Posteriormente, ejecutar las migraciones de la base de datos con el siguiente comando:
+
+```
+    flask db migrate
+```
+## **:five:** Crear una carpeta en la raiz del proyecto 
+
+El nombre de la carpeta debe ser `seeds` y dentro de ella, crear un archivo llamado `roles_seeder.py` y `users_seeder.py`, con el siguiente contenido:
+
+```python
+        ## Archivo roles_seeder.py
+        from flask_seeder import Seeder
+        from app.models.roles_model import RoleModel
 
 
-class RoleSeeder(Seeder):
-    def run(self):
-        pass
-        roles = [
-            {
-                'name': 'Administrador',
-            },
-            {
-                'name': 'Usuario Base'
-            }
-        ]
-        for role in roles:
-            record = RoleModel.where(name=role['name']).first()
-            if not record:
-                new_record = RoleModel.create(**role)
-                self.db.session.add(new_record)
+        class RoleSeeder(Seeder):
+            def run(self):
+                pass
+                roles = [
+                    {
+                        'name': 'Administrador',
+                    },
+                    {
+                        'name': 'Usuario Base'
+                    }
+                ]
+                for role in roles:
+                    record = RoleModel.where(name=role['name']).first()
+                    if not record:
+                        new_record = RoleModel.create(**role)
+                        self.db.session.add(new_record)
 ```
 
 ```python
-from flask_seeder import Seeder
-from app.models.users_model import UserModel
+        ## Archivo users_seeder.py
+        from flask_seeder import Seeder
+        from app.models.users_model import UserModel
 
 
-class UserAdminSeeder(Seeder):
-    def run(self):
-        users = [
-            {
-                'name': <nombre del usuario>,
-                'password': <contraseña del usuario>,
-                'email': <correo electrónico del usuario>,
-                'rol_id': 1
-            }
-        ]
-        for user in users:
-            record = UserModel.where(email=user['email']).first()
-            if not record:
-                print(f'Se crea usuario -> {user}')
-                new_record = UserModel.create(**user)
-                new_record.hashPassword()
-                self.db.session.add(new_record)
+        class UserAdminSeeder(Seeder):
+            def run(self):
+                users = [
+                    {
+                        'name': <nombre del usuario>,
+                        'password': <contraseña del usuario>,
+                        'email': <correo electrónico del usuario>,
+                        'rol_id': 1
+                    }
+                ]
+                for user in users:
+                    record = UserModel.where(email=user['email']).first()
+                    if not record:
+                        print(f'Se crea usuario -> {user}')
+                        new_record = UserModel.create(**user)
+                        new_record.hashPassword()
+                        self.db.session.add(new_record)
 ```
 
-6. Cargar los roles:
+## **:six:**Cargar los roles y sus usuarios:
 ```
-flask db seed
+    flask db seed
 ```
+## **:seven:** Iniciar el servidor de Flask:
+```
+    flask run
+```
+
+# Deuda Técnica
+
+## **:one:**  Devolución de los recursos de imagenes y sonidos generados.
+Buscar una mejor forma de devolver los recursos debido a que la API actualmente esta devolviendo el archivo en base64 y no en formato original. Una posible solución seria brindar una dirección URL para acceder a los recursos, pero esto requeriría una implementación adicional en el servidor de AWS.
+
+## **:two:**  Obtener también la traducción de la descripción de la frase.
+Actualmente, la API solamente devuelve la imagen y el sonido de la frase, pero no de la descripción. Esto se solucionaría agregando una nueva columna en la tabla `phrases` para guardar la traducción de la descripción de la frase.
+
+## **:three:**  Mejorar el manejo de errores.
+Para mejorar el manejo de errores, se podría implementar una función de manejo de errores personalizada en la API. Esto permitiría a la API devolver mensajes de error más detallados y específicos, como por ejemplo "No se pudo generar la imagen debido a un error de conexión a la base de datos".
