@@ -187,7 +187,7 @@ El nombre de la carpeta debe ser `seeds` y dentro de ella, crear un archivo llam
                         self.db.session.add(new_record)
 ```
 
-### **:six:**Cargar los roles y sus usuarios:
+### **:six:** Cargar los roles y sus usuarios:
 ```
     flask db seed
 ```
