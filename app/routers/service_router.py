@@ -1,4 +1,5 @@
 from app import api
+from flask import  request
 from flask_restx import Resource
 from app.controllers.services_controller import ServiceController
 
@@ -53,3 +54,11 @@ class ImgFree(Resource):
                 "messge": f"Mistakes in consult: {err}",
                 "code":500,
             },500
+            
+@service_ns.route('/free/create')
+class CreateFree(Resource):
+    def get(self):
+        # Intentar obtener la IP del encabezado X-Forwarded-For
+        client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        return f"La IP del cliente es: {client_ip}"
+    
