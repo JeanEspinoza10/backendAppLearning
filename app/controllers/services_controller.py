@@ -152,6 +152,13 @@ class ServiceController:
         try:
             ip = request.headers.get('X-Forwarded-For', request.remote_addr)
             record_browser = self.browserModel.where(ip=ip).first()
+            if not record_browser:
+                return {
+                    'message':'No browser found, please create is phrases',
+                    'code':404,
+                    'data':[],
+                },404
+                
             records_phrases = self.phrasesModel.where(browsers_id=record_browser.id).all()
             if records_phrases:
                 # Become response a JSON
