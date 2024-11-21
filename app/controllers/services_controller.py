@@ -117,6 +117,9 @@ class ServiceController:
                 db.session.commit()
             
             prompt = data['phrase']
+            if len(prompt) > 80:
+                raise Exception('Phrases must be less than 80 characters')
+            
             title = self.generatePhrases.generate_phrases(prompt=prompt)
             sound_url = self.generateSounds.text_to_speech_file_OpenAI(text=title)
             img_url = self.generateImg.generate_img(prompt=title,user_id=browser_ip)
