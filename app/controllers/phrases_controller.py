@@ -57,6 +57,9 @@ class PhrasesController:
         
     def create(self, data, user_id=0):
         try:
+            prompt = data['phrase']
+            if len(prompt) > 80:
+                raise Exception('Phrases must be less than 80 characters')
             if user_id != 0:
                 user_id = user_id
             else:
@@ -64,7 +67,6 @@ class PhrasesController:
             
             quantity = self.validateQuantity(user_id=user_id)
             if quantity:
-                prompt = data['phrase']
                 title = self.generatePhrases.generate_phrases(prompt=prompt)
                 sound_url = self.generateSounds.text_to_speech_file_OpenAI(text=title)
                 img_url = self.generateImg.generate_img(prompt=title,user_id=user_id)
