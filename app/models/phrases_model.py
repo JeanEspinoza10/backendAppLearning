@@ -16,5 +16,8 @@ class PhrasesModel(BaseModel):
 
     user_id = Column(Integer, ForeignKey('users.id'))
     users = relationship('UserModel', uselist=False, back_populates='usersPhrases')
+    
+    browsers_id = Column(Integer, ForeignKey('browsers.id'))
+    browsers = relationship('BrowserModel', uselist=False, back_populates='browsersPhrases')
 
     status = Column(Boolean, default=True)

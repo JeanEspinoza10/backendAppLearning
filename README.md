@@ -126,7 +126,8 @@ En la raíz del proyecto con las siguientes variables de entorno:
 ### **:four:** Posteriormente, ejecutar las migraciones de la base de datos con el siguiente comando:
 
 ```
-    flask db migrate
+    flask db migrate -m "Descripción de los cambios"
+    flask db upgrade 
 ```
 ### **:five:** Crear una carpeta en la raiz del proyecto 
 

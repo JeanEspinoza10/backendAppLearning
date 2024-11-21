@@ -6,6 +6,7 @@ from app import db
 from app.models.roles_model import RoleModel
 from app.models.users_model import UserModel
 from app.models.phrases_model import PhrasesModel
+from app.models.browser_model import BrowserModel
 from app.core.generate_img import GeneretaImg
 
 class ServiceController:
@@ -13,6 +14,7 @@ class ServiceController:
         self.userModel = UserModel
         self.rolModel = RoleModel
         self.phrasesModel = PhrasesModel
+        self.browserModel = BrowserModel
         self.generatePhrases = Phrases()
         self.generateSounds = Sounds()
         self.generateImg = GeneretaImg()
@@ -86,6 +88,96 @@ class ServiceController:
                     'code':200,
                     'data':[response],
                 },200
+        except Exception as err:
+            return {
+                "message":str(err),
+                "code": 500,
+                "data":[]
+            },500
+    
+    def free_create(self,request):
+        try:
+            data = request.json
+            browser_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+            # Getting quantity of browsers
+            record_browser = self.browserModel.where(ip= browser_ip).first()
+            if record_browser:
+                quantity = record_browser.count
+                if quantity >= 3:
+                    return {
+                        'message':'You can not create more than 3 phrases',
+                        'code':401,
+                        'data':[],
+                    },401
+            else:
+                record_browser = self.browserModel.create(
+                    ip=browser_ip
+                )
+                db.session.add(record_browser)
+                db.session.commit()
+            
+            prompt = data['phrase']
+            title = self.generatePhrases.generate_phrases(prompt=prompt)
+            sound_url = self.generateSounds.text_to_speech_file_OpenAI(text=title)
+            img_url = self.generateImg.generate_img(prompt=title,user_id=browser_ip)
+            translation = prompt
+            description = self.generatePhrases.generate_description(prompt=title)
+            data_record = {
+                'title': title,
+                'sound_url': sound_url,
+                'description': description,
+                'translation': translation,
+                'img_url': img_url,
+                'browsers_id': record_browser.id,
+                'user_id': 1,
+            }
+            record = self.phrasesModel.create(**data_record)
+            if record:
+                record_browser.count += 1
+            db.session.add(record)
+            db.session.commit()
+            return {
+                'message':'Phrases created',
+                'code':200,
+                'data':data_record,
+            },200            
+        except Exception as err:
+            return {
+                "message":str(err),
+                "code": 500,
+                "data":[]
+            },500
+    
+    def free_browsersAll(self, request):
+        try:
+            ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+            record_browser = self.browserModel.where(ip=ip).first()
+            records_phrases = self.phrasesModel.where(browsers_id=record_browser.id).all()
+            if records_phrases:
+                # Become response a JSON
+                response = []
+                for record in records_phrases:
+                    record_dict = {
+                        'id': record.id,
+                        'title': record.title,
+                        'sound_url': record.sound_url,
+                        'description': record.description,
+                        'translation':record.translation,
+                        'img_url':record.img_url
+                    }
+                    response.append(record_dict)
+                return {
+                    'message':'List of Phrases',
+                    'code':200,
+                    'data':response,
+                },200
+            else:
+                return {
+                    'message':'No phrases found',
+                    'code':404,
+                    'data':[],
+                },404
+                        
         except Exception as err:
             return {
                 "message":str(err),
