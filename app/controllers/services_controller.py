@@ -8,6 +8,7 @@ from app.models.users_model import UserModel
 from app.models.phrases_model import PhrasesModel
 from app.models.browser_model import BrowserModel
 from app.core.generate_img import GeneretaImg
+from flask import request
 
 class ServiceController:
     def __init__(self):
@@ -19,6 +20,7 @@ class ServiceController:
         self.generateSounds = Sounds()
         self.generateImg = GeneretaImg()
         self.aws = AWS()
+        
     def free(self):
         try:
             records_phrases = self.phrasesModel.query.filter(self.phrasesModel.user_id == None).all()
@@ -64,18 +66,11 @@ class ServiceController:
                 "code":500,
                 "data":[],
             },500
-        
-    
+         
     def download_free(self,id,valueItem):
         try:
             record_phrase = self.phrasesModel.query.filter(self.phrasesModel.id == id).first()
-            if record_phrase.user_id:
-                return {
-                        'message':'Not have permission for record',
-                        'code':401,
-                        'data':[],
-                    },401
-            else:
+            if not record_phrase.user_id or record_phrase.browsers.ip == request.headers.get('X-Forwarded-For', request.remote_addr):
                 file_sound = self.aws.download_file(getattr(record_phrase, valueItem, None))
                 file_content = file_sound.read()
                 encoded_content = base64.b64encode(file_content).decode('utf-8')
@@ -88,6 +83,12 @@ class ServiceController:
                     'code':200,
                     'data':[response],
                 },200
+            else:
+                return {
+                        'message':'Not have permission for record',
+                        'code':401,
+                        'data':[],
+                    },401                
         except Exception as err:
             return {
                 "message":str(err),
