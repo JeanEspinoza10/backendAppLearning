@@ -1,4 +1,5 @@
 import base64
+import audioop
 from app.core.aws import AWS
 from app.core.phrases import Phrases
 from app.core.sounds import Sounds
@@ -7,6 +8,7 @@ from app.utils.response import Response
 from flask_jwt_extended import current_user
 from app.core.generate_img import GeneretaImg
 from datetime import date
+from io import BytesIO
 from app import db
 
 class PhrasesController:
@@ -120,6 +122,29 @@ class PhrasesController:
                 return self.response.code200(message="Content of file sound",data=response)
             else:
                 return self.response.code404(message="Not have permission for record")                
+        except Exception as e:
+            message=f"An error occurred:{e}"
+            return self.response.code400(message=message)
+    
+    def getAllSounds(self):
+        try:
+            user_id = int(self.current_user.id)
+            records = self.phrasesModel.where(user_id=user_id, status=True).order_by('id').all()        
+            audio_combined = b''  # Inicializar audio vacío
+            if records:
+                for record in records:
+                    file_sound = self.aws.download_file(getattr(record, 'sound_url', None))
+                    file_content = file_sound.read()
+                    # Concatenar audio con 3 segundos de silencio
+                    audio_combined += file_content
+                encoded_audio = base64.b64encode(audio_combined).decode('utf-8')
+                # Response
+                response = {
+                    'file_name': "phrases",
+                    'file_content_base64': encoded_audio
+                }
+                return self.response.code200(message="Content of file sound",data=response)
+            return self.response.code404(message="Phrases not found for users")
         except Exception as e:
             message=f"An error occurred:{e}"
             return self.response.code400(message=message)

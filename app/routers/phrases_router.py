@@ -59,3 +59,12 @@ class PhrasesSound(Resource):
         ''' Get phrases sound'''
         controller = PhrasesController()
         return controller.download(id=id,valueItem="sound_url")
+
+@phrases_ns.route('/sounds/all')
+@phrases_ns.doc(security="Bearer")
+class PhrasesSoundsAll(Resource):
+    @jwt_required()
+    def get(self):
+        ''' Get all phrases sounds'''
+        controller = PhrasesController()
+        return controller.getAllSounds()
